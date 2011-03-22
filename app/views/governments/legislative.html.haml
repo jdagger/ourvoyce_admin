@@ -1,0 +1,81 @@
+- content_for :scripts do
+  = javascript_include_tag "change_support.js"
+
+.left-content
+  = render :partial => "shared/government_menu"
+  .clear
+  %h4 Senate
+  %div.vote-table-top-cap
+  %div.tiny-table-wrap
+    %table.vote-table
+      %thead
+        %tr
+          %th= "Vote"
+          %th= table_sort_header_link :header => "Name", :sort_column => 'name', :link_params => { :filter => params[:filter], :page => params[:page] }
+          %th= table_sort_header_link :header => "Title", :sort_column => 'default', :link_params => { :filter => params[:filter], :page => params[:page] }
+          %th
+            = table_sort_header_link :header => "SS", :sort_column => 'social', :link_params => { :filter => params[:filter], :page => params[:page] }
+            = '/'
+            = table_sort_header_link :header => "PR", :sort_column => 'participation', :link_params => { :filter => params[:filter], :page => params[:page] }
+      %tbody
+        - @presenter.senators.each do |senator|
+          %tr{:class => (senator.id == @default_map[:id] ? 'selected' : '')}
+            %td
+              - if @current_user.nil?
+                = render :partial => 'shared/vote_control_no_access'
+              - else
+                = render :partial => 'shared/vote_control', :object =>{:id => senator.id, :support_type => senator.support_type, :post_url => :government_vote}, :as => :d
+            %td
+              %a{:href => url_for(:filter => params[:filter], :sort => params[:sort], :page => params[:page], :id => senator.id), :class => 'dataset' }
+                %input{:type => :hidden, :class => 'jq-map-data', :value =>  "#{senator.id}_government"}
+                %input{:type => :hidden, :class => 'jq-title', :value => "#{senator.first_name} #{senator.last_name}" }
+                %input{:type => :hidden, :class => 'jq-wikipedia', :value => senator.wikipedia }
+                %input{:type => :hidden, :class => 'jq-website', :value => senator.website }
+                %img{:src => get_government_image_64(senator.logo, senator.government_type_id, senator.chamber_id) , :alt => 'portrait'}
+                %br
+                = senator.first_name + " " + senator.last_name
+            %td= senator.title
+            %td
+              %div{ :class=> "pr-pie", :style => "background: url(#{participation_rate_image(senator.participation_rate)})", :alt => senator.participation_rate}
+                = senator.social_score
+  %div.vote-table-cap
+  
+  %h4 House of Representatives
+  %div.vote-table-top-cap
+  %div.vote-table-wrap
+    %table.vote-table.house-of-representatives
+      %thead
+        %tr
+          %th= "Vote"
+          %th= table_sort_header_link :header => "Name", :sort_column => 'name', :link_params => { :filter => params[:filter], :page => params[:page] }
+          %th= table_sort_header_link :header => "Title", :sort_column => 'default', :link_params => { :filter => params[:filter], :page => params[:page] }
+          %th= table_sort_header_link :header => "District", :sort_column => 'district', :link_params => { :filter => params[:filter], :page => params[:page] }
+          %th
+            = table_sort_header_link :header => "SS", :sort_column => 'social', :link_params => { :filter => params[:filter], :page => params[:page] }
+            = '/'
+            = table_sort_header_link :header => "PR", :sort_column => 'participation', :link_params => { :filter => params[:filter], :page => params[:page] }
+      %tbody
+        - @presenter.representatives.each do |rep|
+          %tr{:class => (rep.id == @default_map[:id] ? 'selected' : '')}
+            %td
+              - if @current_user.nil?
+                = render :partial => 'shared/vote_control_no_access'
+              - else
+                = render :partial => 'shared/vote_control', :object =>{:id => rep.id, :support_type => rep.support_type, :post_url => :government_vote}, :as => :d
+            %td
+              %a{:href => url_for(:filter => params[:filter], :sort => params[:sort], :page => params[:page], :id => rep.id), :class => 'dataset' }
+                %input{:type => :hidden, :class => 'jq-map-data', :value =>  "#{rep.id}_government"}
+                %input{:type => :hidden, :class => 'jq-title', :value => "#{rep.first_name} #{rep.last_name}" }
+                %input{:type => :hidden, :class => 'jq-wikipedia', :value => rep.wikipedia }
+                %input{:type => :hidden, :class => 'jq-website', :value => rep.website }
+                %img{:src => get_government_image_64(rep.logo, rep.government_type_id, rep.chamber_id) , :alt => 'portrait'}
+                %br
+                = rep.first_name + " " + rep.last_name
+            %td= rep.title
+            %td= rep.district
+            %td
+              %div{ :class=> "pr-pie", :style => "background: url(#{participation_rate_image(rep.participation_rate)})", :alt => rep.participation_rate}
+                = rep.social_score
+  %div.vote-table-cap
+.graph-contents
+  = render :partial => "shared/map_graph", :locals => { :id => @default_map[:id], :model => "government", :title => @default_map[:title], :wikipedia => @default_map[:wikipedia], :website => @default_map[:website] }

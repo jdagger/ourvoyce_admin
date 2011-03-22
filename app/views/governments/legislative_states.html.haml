@@ -1,0 +1,31 @@
+.left-content
+  = render :partial => "shared/government_menu"
+  %div.vote-table-top-cap
+  %div.vote-table-wrap
+    %table.vote-table.legislative-state
+      %thead
+        %tr
+          %th= table_sort_header_link :header => "Name", :sort_column => 'name', :link_params => { :filter => params[:filter], :page => params[:page] }
+          %th
+            = table_sort_header_link :header => "SS", :sort_column => 'social', :link_params => { :filter => params[:filter], :page => params[:page] }
+            = '/'
+            = table_sort_header_link :header => "PR", :sort_column => 'participation', :link_params => { :filter => params[:filter], :page => params[:page] }
+          %th
+      %tbody
+        - @presenter.states.each do |state|
+          %tr{:class => (state.id == @default_map[:id] ? 'selected' : '')}
+            %td
+              = link_to "<img src='#{get_state_image_128(state.logo)}' />".html_safe, :action => :legislative, :state => state.abbreviation
+              %br
+              = state.name
+            %td
+              %div{ :class=> "pr-pie", :style => "background: url(#{participation_rate_image(state.participation_rate)})", :alt => state.participation_rate}
+                = state.social_score
+            %td
+              %a{:href => url_for(:sort => params[:sort], :id => state.id), :class => 'dataset' }
+                = 'View Graph'
+                %input{:type => :hidden, :class => 'jq-map-data', :value =>  "#{state.id}_legislativestate"}
+                %input{:type => :hidden, :class => 'jq-title', :value =>  state.name }
+  %div.vote-table-cap
+.graph-contents
+  = render :partial => "shared/map_graph", :locals => {:id => @default_map[:id], :model => "legislativestate", :title => @default_map[:title], :wikipedia => @default_map[:wikipedia], :website => @default_map[:website]}

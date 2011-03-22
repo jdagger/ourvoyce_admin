@@ -1,0 +1,152 @@
+<script type="text/javascript">
+	var state = "";
+  var model = '<%= model %>';
+	var curID = "<%= id %>";
+	var mapLoaded = false;
+  var barLoaded = false;
+  
+	function setState(st){
+	  state = st;
+	  sendToGraph(model + "/age/" + curID + "/" + state);
+	}
+	
+	function sendToMap(dataString) {
+    thisMovie("map").sendTextToFlash(dataString);
+  }
+  
+  function sendToGraph(dataString) {
+    thisMovie("bar-graph").sendTextToFlash(dataString);
+    //alert("sending to graph " + dataString);
+  }
+	
+	$(document).ready(function(){
+	  function getFlashMovie(movieName) { 
+      var isIE = navigator.appName.indexOf("Microsoft") != -1;
+      return (isIE) ? window[movieName] : document[movieName];
+    }
+
+    if($("div.website a").attr("href") == ""){
+      $("div.website").hide();
+    }
+    if($("div.wikipedia a").attr("href") == ""){
+      $("div.wikipedia").hide();
+    }
+	  
+	  $("a.dataset").click(function(){
+	    var tableParent = $(this).parent().parent().parent().parent();
+	    
+	    if(tableParent.hasClass("singlet-table")){
+	      $(".singlet.selected").removeClass("selected");
+  	    $(".vote-table .selected").removeClass("selected");  //remove the selected items
+	      tableParent.parent().parent().addClass("selected");  //add the selected class to the singlet
+	    }else{
+	      $(".singlet.selected").removeClass("selected");
+  	    $(".vote-table .selected").removeClass("selected");  //remove the selected items
+  	    $(this).parent().parent().addClass("selected");  //add selected to the clicked item
+	    }
+	    
+      var title = $(this).children('.jq-title').val();
+      var wikipedia_url = $(this).children('.jq-wikipedia').val();
+      var website_url = $(this).children('.jq-website').val();
+
+
+      if(wikipedia_url == null || wikipedia_url == '') {
+        $("div.wikipedia").hide();
+      }
+      else{
+        $("div.wikipedia").show();
+        $("div.wikipedia a").attr("href", wikipedia_url );
+      }
+
+      if(website_url == null || website_url == '') {
+        $("div.website").hide();
+      }
+      else{
+        $("div.website").show();
+        $("div.website a").attr("href", website_url );
+      }
+
+	    //fade the text
+	    $("h4.map-title").fadeOut(500, function(){
+	      $(this).text(title);
+	      $(this).fadeIn(500);
+	    });
+
+
+      map_data = $(this).children('.jq-map-data').val();
+	    
+      curID = map_data.split('_')[0]
+      model = map_data.split('_')[1]
+	    
+	    sendToMap(model + "/map/" + curID + "/");  //send to the map
+	    sendToGraph(model + "/age/" + curID + "/" + state);  //send to the graph
+	    
+	    return false;
+	  });
+	  
+	  <% if id.blank? %>
+      //$("a.dataset:first").click();
+    <% end %>
+	});
+
+  function thisMovie(movieName) {
+    if (navigator.appName.indexOf("Microsoft") != -1) {
+      return window[movieName];
+    } else {
+      return document[movieName];
+    }
+  }
+	
+	function mapEmbedded(e){
+    mapLoaded = true;
+    
+    if( mapLoaded && barLoaded){
+    }
+  }
+  
+  function barEmbedded(e){
+    barLoaded = true;
+    
+    if( mapLoaded && barLoaded){
+    }
+  }
+	
+	var mapvars = {
+	  xmlpath: model + "/map/" + curID + "/",
+	  baseURL:"/services/website/"
+	};
+
+	
+	var agevars = {
+	  xmlpath: model + "/age/" + curID + "/",
+	  baseURL:"/services/website/",
+	  barwidth: 25
+	};
+	
+  var params = {
+      menu: "false",
+      wmode: "transparent"
+  };
+  var attributes = {
+    allowfullscreen: "true",
+    allowscriptaccess: "always",
+    wmode: "transparent"
+  };
+
+  swfobject.embedSWF("/swf/map.swf", "map", "350", "270","10.0.0", "", mapvars, params, attributes, barEmbedded);
+  swfobject.embedSWF("/swf/bar-graph.swf", "bar-graph", "350", "240","10.0.0", "", agevars, params, attributes, mapEmbedded);     
+  
+</script>
+
+<div class="maps-container">
+  <div class="corp-title"><h4 class="map-title"><%= title %></h4>
+    <div class="wikipedia">
+      <a href='<%= wikipedia %>' target='_blank'><img src="/images/wikipedia.png" alt="wikipedia" /></a>
+    </div>
+    <div class="website">
+      <a href='<%= website %>' target='_blank'><img src="/images/website.png" alt="website" /></a>
+    </div>
+  </div>
+  <div id="map"></div>
+  <div id="bar-graph"></div>
+</div>

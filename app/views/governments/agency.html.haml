@@ -1,0 +1,59 @@
+- content_for :scripts do
+  = javascript_include_tag "change_support.js"
+
+.left-content
+  %div.page-title
+    = form_tag :agency do
+      %h4
+        Search Agency:
+      =text_field_tag :search_filter, @presenter.search_text
+      =image_submit_tag("search-button.gif")
+    %div.clear
+  
+  = render :partial => "shared/government_menu"
+    
+  .letter-filter
+    - ('A'..'Z').each do |letter|
+      = link_to letter, {:filter => "starts_with=#{letter}", :sort => params[:sort], :page => 1}
+  %div.filtering
+    =link_to 'All Records', {:filter => 'vote=all', :sort => params[:sort], :page => 1}, :class=> "sort-button #{ filter_is_selected('vote=all', params) }"
+    =link_to 'Thumbs Up', {:filter => 'vote=thumbsup', :sort => params[:sort], :page => 1}, :class=> "sort-button #{ filter_is_selected('vote=thumbsup', params) }"
+    =link_to 'Thumbs Down', {:filter => 'vote=thumbsdown', :sort => params[:sort], :page => 1}, :class=> "sort-button #{ filter_is_selected('vote=thumbsdown', params) }"
+    =link_to 'Neutral', {:filter => 'vote=neutral', :sort => params[:sort], :page => 1}, :class=> "sort-button #{ filter_is_selected('vote=neutral', params) }"
+    =link_to 'Voted', {:filter => 'vote=vote', :sort => params[:sort], :page => 1}, :class=> "sort-button #{ filter_is_selected('vote=vote', params) }"
+    =link_to 'No Vote', {:filter => 'vote=novote', :sort => params[:sort], :page => 1}, :class=> "sort-button #{ filter_is_selected('vote=novote', params) }"
+
+  %div.vote-table-wrap
+    %table.vote-table.agency
+      %thead
+        %tr
+          %th= "Vote"
+          %th= table_sort_header_link :header => "Name", :sort_column => 'name', :link_params => { :filter => params[:filter], :page => params[:page] }
+          %th
+            = table_sort_header_link :header => "SS", :sort_column => 'social', :link_params => { :filter => params[:filter], :page => params[:page] }
+            = '/'
+            = table_sort_header_link :header => "PR", :sort_column => 'participation', :link_params => { :filter => params[:filter], :page => params[:page] }
+      %tbody
+      - @presenter.agencies.each do |agency|
+        %tr{:class => (agency.id == @default_map[:id] ? 'selected' : '')}
+          %td
+            - if @current_user.nil?
+              = render :partial => "shared/vote_control_no_access"
+            - else
+              = render :partial => "shared/vote_control", :object =>{:id => agency.id, :support_type => agency.support_type, :post_url => :government_vote}, :as => :d
+          %td
+            %a{:href => url_for(:filter => params[:filter], :sort => params[:sort], :page => params[:page], :id => agency.id), :class => 'dataset' }
+              %input{:type => :hidden, :class => 'jq-map-data', :value =>  "#{agency.id}_government"}
+              %input{:type => :hidden, :class => 'jq-title', :value => agency.name }
+              %input{:type => :hidden, :class => 'jq-wikipedia', :value => agency.wikipedia }
+              %input{:type => :hidden, :class => 'jq-website', :value => agency.website }
+              %img{:src => get_government_image_64(agency.logo, 1), :alt => 'logo'}
+              %br
+              = agency.name
+          %td
+            %div{ :class=> "pr-pie", :style => "background: url(#{participation_rate_image(agency.participation_rate)})", :alt => agency.participation_rate}
+              = agency.social_score
+  %div.vote-table-cap
+  = render :partial => "shared/paging", :object => @presenter.paging, :as => :paging_data
+.graph-contents
+  = render :partial => "shared/map_graph", :locals => {:id => @default_map[:id], :model => "government", :title => @default_map[:title], :wikipedia => @default_map[:wikipedia], :website => @default_map[:website]}
