@@ -1,0 +1,19 @@
+#menu
+  =link_to "Users", :users
+  |
+  =link_to "Corporations", :corporations
+  |
+  =link_to "Medias", :medias
+  |
+  =link_to "Governments", :governments
+  |
+  =link_to "Current Question", :current_questions
+  |
+  =link_to "Stats", "/stats"
+  |
+  =link_to "Logs", :logs
+  |
+  - if @current_user.nil?
+    =link_to "Login", :root
+  - else
+    =link_to "Logout", :logout

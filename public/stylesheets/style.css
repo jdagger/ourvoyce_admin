@@ -1,0 +1,46 @@
+#main-content{
+  padding: 10px;
+}
+
+h1{
+  font-size: 18px;
+  font-weight: bold;
+}
+
+div#menu{
+  background-color: #0b2952;
+  color: white;
+  padding: 5px;
+}
+div#menu a{
+  color: white;
+}
+
+.highlight_missing{
+  color: red;
+}
+
+.highlight_found{
+  color: green;
+}
+
+table{
+  border: solid 1px black;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+table th, table td{
+  text-align: left;
+  padding: 3px;
+}
+
+table th{
+  background-color: #aaa;
+}
+
+
+table tr.alt td{
+  background-color: #ccc;
+
+}
