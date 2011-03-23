@@ -21,10 +21,10 @@ class ApplicationController < ActionController::Base
     begin
       user = User.find(@current_user.id)
       if ! ['jdagger', 'rcalvert'].include?(user.login)
-        redirect_to logout_url
+        redirect_to :logout
       end
     rescue
-      redirect_to logout_url
+      redirect_to :logout
     end
   end
 

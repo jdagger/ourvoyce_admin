@@ -1,5 +1,5 @@
 class AdminsController < ApplicationController
-  skip_before_filter :check_admin, :only => [:index, :login]
+  skip_before_filter :check_admin, :only => [:index, :login, :logout]
   skip_before_filter :require_user, :only => [:index, :login]
 
   def index
