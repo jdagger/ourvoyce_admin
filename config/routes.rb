@@ -8,6 +8,10 @@ Production::Application.routes.draw do
   resources :corporations
   resources :medias
   resources :governments
+
+  match "/products/filter/:filter" => "products#index"
+  resources :products
+
   resources :current_questions
 
   match "/logs" => "error_logs#index"
