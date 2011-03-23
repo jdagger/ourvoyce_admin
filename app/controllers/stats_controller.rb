@@ -1,4 +1,4 @@
-class StatsController < AdminController
+class StatsController < ApplicationController
   include SsprCalculations
 
   def index

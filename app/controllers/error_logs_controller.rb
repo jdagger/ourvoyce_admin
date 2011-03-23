@@ -1,4 +1,4 @@
-class ErrorLogsController < AdminController
+class ErrorLogsController < ApplicationController
   require 'cgi'
   def index
     @error_count = ErrorLog.all.count

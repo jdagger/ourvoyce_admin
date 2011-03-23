@@ -9,35 +9,21 @@
 <meta name="description" content="" />
 
 <!-- styles -->
-<%= stylesheet_link_tag 'reset', 'styles', :media => "screen, projection" %>
-<!--[if IE]><link href="/stylesheets/ie7.css" rel="stylesheet" type="text/css" /><![endif]-->
+<%= stylesheet_link_tag 'reset', :media => "screen, projection" %>
+<%= stylesheet_link_tag 'scaffold', :media => "screen, projection" %>
+<%= stylesheet_link_tag 'style', :media => "screen, projection" %>
 <%= javascript_include_tag 'jquery-1.4.3.min', 'jquery.fixheadertable.min', 'swfobject', 'rails', 'cufon-yui', 'Subway_Ticker_400.font', 'base' %>
 <%= yield :scripts %>
 <%= csrf_meta_tag %>
 
 <body>
-  
-<div id="main">
-  
-  <%= render :partial => "shared/header" %>
-  
-  <div id="container">
-
-  	<%= render :partial => "shared/main_navigation" %>
-
-    <div id="main-top"></div>
+    <div id="header">
+      <%= render :partial => 'shared/header' %>
+    </div>
     <div id="main-content">
       <div id="content">
 		    <%= yield %>
       </div>
     </div>
-    <div id="main-bottom"></div>
-  
-  </div>
-    
-  <%= render :partial => "shared/footer" %>
-
-</div>
-  
 </body>
 </html>

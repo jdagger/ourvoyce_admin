@@ -1,8 +1,8 @@
 class ApplicationController < ActionController::Base
   helper_method :current_user_session, :current_user
 
-  before_filter :basic_authentication
   before_filter :require_user
+  before_filter :check_admin
 
   protect_from_forgery
 
@@ -17,11 +17,22 @@ class ApplicationController < ActionController::Base
     @current_user = current_user_session && current_user_session.user
   end
 
+  def check_admin
+    begin
+      user = User.find(@current_user.id)
+      if ! ['jdagger', 'rcalvert'].include?(user.login)
+        redirect_to logout_url
+      end
+    rescue
+      redirect_to logout_url
+    end
+  end
+
   def require_user
     unless current_user
       store_location
       flash[:notice] = "You must be logged in to access this page"
-      redirect_to register_url
+      redirect_to root_url
       return false
     end
   end
@@ -43,16 +54,4 @@ class ApplicationController < ActionController::Base
     redirect_to(session[:return_to] || default)
     session[:return_to] = nil
   end
-
-
-  def basic_authentication
-    authenticate_or_request_with_http_basic do |username, password|
-      if user = User.find_by_login(username) 
-        user.valid_password?(password)
-      else
-        false
-      end
-    end
-  end
-  
 end

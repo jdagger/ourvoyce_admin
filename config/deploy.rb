@@ -1,7 +1,7 @@
 require 'thinking_sphinx/deploy/capistrano'
 
-set :application, "Ourvoyce"
-set :repository,  "git@github.com:jdagger/ourvoyce.git"
+set :application, "Ourvoyce Admin"
+set :repository,  "git@github.com:jdagger/ourvoyce_admin.git"
 
 set :scm, :git
 set :scm_verbose, "true"
@@ -9,35 +9,32 @@ set :scm_verbose, "true"
 
 ssh_options[:forward_agent] = true
 
-set :deploy_to, "/webapps/ourvoyce"
+set :deploy_to, "/webapps/ourvoyce_admin"
 
 set :use_sudo, false
 
 set :user, :root
 
 
-role :web, "50.56.91.61", "50.56.91.89"                          # Your HTTP server, Apache/etc
-role :app, "50.56.91.61"                          # This may be the same as your `Web` server
-role :db,  "50.56.91.61", :primary => true # This is where Rails migrations will run
+role :web, "50.56.91.89"                          # Your HTTP server, Apache/etc
+role :app, "50.56.91.89"                          # This may be the same as your `Web` server
+role :db,  "50.56.91.89", :primary => true # This is where Rails migrations will run
 
 namespace :deploy do
   desc "Stopping server"
   task :stop do
     #find_and_execute_task("nginx:stop")
-    find_and_execute_task("thinking_sphinx:stop")
   end
 
   desc "Starting server"
   task :start do
     #find_and_execute_task("nginx:start")
-    find_and_execute_task("thinking_sphinx:rebuild")
   end
 
   desc "Restarting server"
   task :restart do
     #find_and_execute_task("nginx:stop")
     #find_and_execute_task("nginx:start")
-    find_and_execute_task("thinking_sphinx:rebuild")
   end
 
 end
@@ -72,5 +69,3 @@ end
 #end
 
 #end
-
-after "deploy:setup", "thinking_sphinx:shared_sphinx_folder"

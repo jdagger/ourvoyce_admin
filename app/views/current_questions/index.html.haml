@@ -10,7 +10,7 @@
   
 
   - @current_questions.each do |current_question|
-    %tr
+    %tr{:class => cycle("", "alt")}
       %td
         %b
           = link_to 'Edit', edit_current_question_path(current_question)

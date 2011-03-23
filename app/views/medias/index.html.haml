@@ -1,139 +1,30 @@
-- content_for :scripts do
-  = javascript_include_tag "change_support.js"
+%h1 Listing medias
 
-.left-content
-  = render :partial => "shared/media_menu"
-  
-  - if @presenter.media_types.count > 1
-    - @presenter.media_types.each do |media_type|
-      %div.singlet{ :class => "#{media_type == @presenter.media_types.first ? "selected" : ""}"}
-        %div.singlet-left
-        %div.singlet-table-wrap
-          %table.singlet-table
-            %tbody
-              %tr{:class => (media_type.id == @default_map[:id] && @default_map[:model] == 'mediatype' ? 'selected' : '')}
-                %td.outlet.landing 
-                  = link_to media_type.name, :media_type => media_type.name
-                %td
-                  %div{ :class=> "pr-pie", :style => "background: url(#{participation_rate_image(media_type.participation_rate)})", :alt => media_type.participation_rate}
-                    = media_type.social_score
-                %td
-                  %a{:href => url_for(:media_type => params[:media_type]), :class => 'dataset' }
-                    = 'Graph'
-                    %input{:type => :hidden, :class => 'jq-map-data', :value =>  "#{media_type.id}_mediatype"}
-                    %input{:type => :hidden, :class => 'jq-title', :value => media_type.name }
-        %div.singlet-right
-  
-  - if @presenter.networks.count == 1
-    %div.singlet
-      %div.singlet-left
-      %div.singlet-table-wrap
-        %table.singlet-table
-          %tbody
-            - @presenter.networks.each do |network|
-              %tr{:class => (network.id == @default_map[:id] && @default_map[:model] == 'network' ? 'selected' : '')}
-                %td.outlet
-                  - if @presenter.networks.count == 1
-                    %a{:href => url_for(:media_type => @presenter.media_types[0].name) }
-                      %img{:src => get_media_image_128(network.logo), :alt => 'logo'}
-                      %br
-                      = network.name
-                  - else
-                    %a{:href => url_for(:media_type => @presenter.media_types[0].name, :network => network.name) }
-                      %img{:src => get_media_image_128(network.logo), :alt => 'logo'}
-                      %br
-                      = network.name
-                %td
-                  %div{ :class=> "pr-pie", :style => "background: url(#{participation_rate_image(network.participation_rate)})", :alt => network.participation_rate}
-                    = network.social_score
-                %td
-                  %a{:href => url_for(:media_type => params[:media_type], :network => params[:network]), :class => 'dataset' }
-                    = "Graph"
-                    %input{:type => :hidden, :class => 'jq-map-data', :value =>  "#{network.id}_network"}
-                    %input{:type => :hidden, :class => 'jq-title', :value => network.name }
-                    %input{:type => :hidden, :class => 'jq-wikipedia', :value => network.wikipedia }
-                    %input{:type => :hidden, :class => 'jq-website', :value => network.website }
-      %div.singlet-right
-  
-  - if @presenter.networks.count > 1
-    %div.vote-table-top-cap
-    %div.vote-table-wrap
-      %table.vote-table.media-list
-        %thead
-          %tr
-            %th
-            %th
-            %th
-            %th
-        %tbody
-          - @presenter.networks.each do |network|
-            %tr{:class => (network.id == @default_map[:id] && @default_map[:model] == 'network' ? 'selected' : '')}
-              %td
-                - if @presenter.networks.count == 1
-                  %a{:href => url_for(:media_type => @presenter.media_types[0].name) }
-                    %img{:src => get_media_image_128(network.logo), :alt => 'logo'}
-                    %br
-                    = network.name
-                - else
-                  %a{:href => url_for(:media_type => @presenter.media_types[0].name, :network => network.name) }
-                    %img{:src => get_media_image_128(network.logo), :alt => 'logo'}
-                    %br
-                    = network.name
-              %td
-                %div{ :class=> "pr-pie", :style => "background: url(#{participation_rate_image(network.participation_rate)})", :alt => network.participation_rate}
-                  = network.social_score
-              %td
-                %a{:href => url_for(:media_type => params[:media_type], :network => params[:network]), :class => 'dataset' }
-                  = "Graph"
-                  %input{:type => :hidden, :class => 'jq-map-data', :value =>  "#{network.id}_network"}
-                  %input{:type => :hidden, :class => 'jq-title', :value => network.name }
-                  %input{:type => :hidden, :class => 'jq-wikipedia', :value => network.wikipedia }
-                  %input{:type => :hidden, :class => 'jq-website', :value => network.website }
-    %div.vote-table-cap
+%table.admin
+  %tr
+    %th
+    %th Name
+    %th Logo
+    %th Type
+    %th Parent
+    %th Website
+    %th Wiki
+    %th Data1
+    %th Data2
+    %th
 
+  - @medias.each do |media|
+    %tr{:class => cycle("", "alt")}
+      %td= link_to 'Edit', edit_media_path(media)
+      %td= media.name
+      %td= media.logo.nil? ? highlight_missing_cell : "<img src='#{get_media_image_128(media.logo)}' />".html_safe
+      %td= media.media_type.nil? ? highlight_missing_cell : media.media_type.name
+      %td= media.parent_media.nil? ? highlight_missing_cell : media.parent_media.name
+      %td= highlight_or_link media.website
+      %td= highlight_or_link media.wikipedia
+      %td= media.data1 || highlight_missing_cell
+      %td= media.data2 || highlight_missing_cell
+      %td= link_to 'Delete', media_path(media), :confirm => 'Are you sure?', :method => :delete
 
-  - if @presenter.shows.count > 0 || @presenter.force_display_shows
-    %div.filtering
-      =link_to 'All Records', {:media_type => params[:media_type], :network => params[:network], :filter => 'all', :sort => params[:sort], :page => 1}, :class=> "sort-button #{ filter_is_selected('all', params) }"
-      =link_to 'Thumbs Up', {:media_type => params[:media_type], :network => params[:network], :filter => 'thumbsup', :sort => params[:sort], :page => 1}, :class=> "sort-button #{ filter_is_selected('thumbsup', params) }"
-      =link_to 'Thumbs Down', {:media_type => params[:media_type], :network => params[:network], :filter => 'thumbsdown', :sort => params[:sort], :page => 1}, :class=> "sort-button #{ filter_is_selected('thumbsdown', params) }"
-      =link_to 'Neutral', {:media_type => params[:media_type], :network => params[:network], :filter => 'neutral', :sort => params[:sort], :page => 1}, :class=> "sort-button #{ filter_is_selected('neutral', params) }"
-      =link_to 'Voted', {:media_type => params[:media_type], :network => params[:network], :filter => 'vote', :sort => params[:sort], :page => 1}, :class=> "sort-button #{ filter_is_selected('vote', params) }"
-      =link_to 'No Vote', {:media_type => params[:media_type], :network => params[:network], :filter => 'novote', :sort => params[:sort], :page => 1}, :class=> "sort-button #{ filter_is_selected('novote', params) }"
-
-    %div.vote-table-wrap
-      %table.vote-table.media-show
-        %thead
-          %tr
-            %th= "Vote"
-            %th= table_sort_header_link :header => "Name", :sort_column => 'name', :link_params => {:filter => params[:filter], :page => params[:page] }
-            %th
-              = table_sort_header_link :header => "SS", :sort_column => 'social', :link_params => {:filter => params[:filter], :page => params[:page] }
-              = '/'
-              = table_sort_header_link :header => "PR", :sort_column => 'participation', :link_params => {:filter => params[:filter], :page => params[:page] }
-        %tbody
-          - @presenter.shows.each do |show|
-            %tr{:class => (show.id == @default_map[:id] && @default_map[:model] == 'media' ? 'selected' : '')}
-              %td
-                - if @current_user.nil?
-                  =render :partial => 'shared/vote_control_no_access'
-                - else
-                  =render :partial => 'shared/vote_control', :object =>{:id => show.id, :support_type => show.support_type, :post_url => :media_vote}, :as => :d
-              %td
-                %a{:href => url_for(:media_type => params[:media_type], :network => params[:network], :filter => params[:filter], :sort => params[:sort], :page => params[:page], :id => params[:id]), :class => 'dataset' }
-                  %input{:type => :hidden, :class => 'jq-map-data', :value =>  "#{show.id}_media"}
-                  %input{:type => :hidden, :class => 'jq-title', :value => show.name }
-                  %input{:type => :hidden, :class => 'jq-wikipedia', :value => show.wikipedia }
-                  %input{:type => :hidden, :class => 'jq-website', :value => show.website }
-                  %img{:src => get_media_image_128(show.logo)}
-                  %br
-                  = show.name
-              %td
-                %div{ :class=> "pr-pie", :style => "background: url(#{participation_rate_image(show.participation_rate)})", :alt => show.participation_rate}
-                  = show.social_score
-    %div.vote-table-cap
-
-    = render :partial => "shared/paging", :object => @paging, :as => :paging_data
-    
-.graph-contents
-  = render :partial => "shared/map_graph", :locals => {:id => @default_map[:id], :model => @default_map[:model], :title => @default_map[:title], :website => @default_map[:website], :wikipedia => @default_map[:wikipedia]}
+%br
+= link_to 'New Corporation', new_media_path
