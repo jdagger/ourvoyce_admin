@@ -1,4 +1,4 @@
-require 'thinking_sphinx/deploy/capistrano'
+#require 'thinking_sphinx/deploy/capistrano'
 
 set :application, "Ourvoyce Admin"
 set :repository,  "git@github.com:jdagger/ourvoyce_admin.git"
@@ -16,9 +16,9 @@ set :use_sudo, false
 set :user, :root
 
 
-role :web, "50.56.91.89"                          # Your HTTP server, Apache/etc
-role :app, "50.56.91.89"                          # This may be the same as your `Web` server
-role :db,  "50.56.91.89", :primary => true # This is where Rails migrations will run
+role :web, "50.56.91.61"                          # Your HTTP server, Apache/etc
+role :app, "50.56.91.61"                          # This may be the same as your `Web` server
+role :db,  "50.56.91.61", :primary => true # This is where Rails migrations will run
 
 namespace :deploy do
   desc "Stopping server"
