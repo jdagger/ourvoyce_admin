@@ -223,6 +223,9 @@ class StatsController < ApplicationController
     tabulate_votes votes
 
     self.vote_data.each do |key, vote|
+      #CORRECTION: For group PR, user_count needs to be muliplied by the number of votable items in the group. This is the number of representatives per
+      #state when calculating state level PR (number of shows per station for media). For example, North Carolina has 2 Senators and 13 Representatives,
+      #so the multiplier for NC would be 15. [:participation_rate => vote.participation_rate(user_count * NC_Rep_Count)]
       LegislativeState.create :state_id => vote.id, :social_score => vote.social_score, :participation_rate => vote.participation_rate(user_count)
     end
 
