@@ -115,6 +115,26 @@ class StatsController < ApplicationController
     redirect_to :action => :index, :notice => "Corporations SSPR calculated (#{((end_time - begin_time) * 1000).to_i}ms)"
   end
 
+  def product_sspr
+    begin_time = Time.now
+
+    Product.update_all("social_score=0, participation_rate=0")
+
+
+    votes = ProductSupport.find(:all, :select => ["product_id as id", :support_type, "count(support_type) as count"], :group => [:product_id, :support_type])
+    tabulate_votes votes
+
+    Product.transaction do
+      self.updated_attributes.each do |key, value|
+        Product.update_all("social_score=#{value[:social_score]}, participation_rate=#{value[:participation_rate]}", :id => key)
+      end
+    end
+
+    end_time = Time.now
+
+    redirect_to :action => :index, :notice => "Product SSPR calculated (#{((end_time - begin_time) * 1000).to_i}ms)"
+  end
+
   def media_sspr
     begin_time = Time.now
 
@@ -196,6 +216,24 @@ class StatsController < ApplicationController
   def government_sspr
     begin_time = Time.now
 
+    user_count = User.count
+
+    #Calculate sspr across each government type (agency, leg, executive)
+    #First, get all votes, grouped by government_type_id
+    votes = GovernmentSupport.find(:all, 
+                                   :select => ["governments.government_type_id as id", :support_type, "count(support_type) as count"], 
+                                   :joins => ["join governments on governments.id = government_supports.government_id"],
+                                   :group => [:support_type, "governments.government_type_id"])
+    tabulate_votes votes
+
+    #Loop through vote data
+    self.vote_data.each do |key, vote|
+      #Get the total number of people in each category
+      gt_count = Government.where("government_type_id = ?", vote.id).count
+      GovernmentType.update_all("social_score=#{vote.social_score}, participation_rate=#{vote.participation_rate(user_count * gt_count)}", :id => vote.id)
+    end
+
+
     Government.update_all("social_score=0, participation_rate=0")
 
     votes = GovernmentSupport.find(:all, :select => ["government_id as id", :support_type, "count(support_type) as count"], :group => [:support_type, :government_id])
@@ -208,7 +246,6 @@ class StatsController < ApplicationController
     end
 
 
-    user_count = User.count
 
     #State stats for legislatives
     LegislativeState.delete_all
@@ -226,7 +263,11 @@ class StatsController < ApplicationController
       #CORRECTION: For group PR, user_count needs to be muliplied by the number of votable items in the group. This is the number of representatives per
       #state when calculating state level PR (number of shows per station for media). For example, North Carolina has 2 Senators and 13 Representatives,
       #so the multiplier for NC would be 15. [:participation_rate => vote.participation_rate(user_count * NC_Rep_Count)]
-      LegislativeState.create :state_id => vote.id, :social_score => vote.social_score, :participation_rate => vote.participation_rate(user_count)
+      
+      #Get the count for the state
+      state_leg_count = Government.where("state_id = ? AND government_type_id = ?", vote.id, 3).count
+
+      LegislativeState.create :state_id => vote.id, :social_score => vote.social_score, :participation_rate => vote.participation_rate(user_count * state_leg_count)
     end
 
     end_time = Time.now
@@ -338,46 +379,4 @@ class StatsController < ApplicationController
   end
 
 
-  def generate_corporate_indexes
-    Corporation.all.each do |corporation|
-      indexes = build_index_array(corporation.name) + build_index_array(corporation.keywords)
-      corporation.generated_indexes = indexes.join(' ')
-      corporation.save
-    end
-    redirect_to :action => :index, :notice => "Corporate indexes updated"
-  end
-
-  def generate_media_indexes
-    Media.all.each do |media|
-      indexes = build_index_array(media.name) + build_index_array(media.keywords)
-      media.generated_indexes = indexes.join(' ')
-      media.save
-    end
-    redirect_to :action => :index, :notice => "Media indexes updated"
-  end
-
-  def generate_government_indexes
-    Government.all.each do |gov|
-      indexes = build_index_array(gov.name) + build_index_array(gov.first_name) + build_index_array(gov.last_name) + build_index_array(gov.keywords)
-      gov.generated_indexes = indexes.join(' ')
-      gov.save
-    end
-    redirect_to :action => :index, :notice => "Government indexes updated"
-  end
-
-  private
-  def build_index_array(value)
-    if value.blank?
-      return []
-    end
-
-    min_length = 2
-    indexes = []
-    value.split(' ').each do |word|
-      (min_length..word.length).each do |len|
-          indexes << word[0, len]
-      end
-    end
-    indexes
-  end
 end

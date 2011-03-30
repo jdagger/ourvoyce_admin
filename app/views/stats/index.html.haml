@@ -2,7 +2,7 @@
   %h2="Several of these options are no longer valid and will be replaced or updated."
 
 %h2 Stats
-%h3= @notice
+%div{:style => "font-weight: bold; font-size: 115%; color: red;"}= @notice
 =link_to "Zip Counts", :action => :zip_user_counts
 %br
 =link_to "State Counts", :action => :state_user_counts
@@ -13,20 +13,13 @@
 %br
 %br
 
-%fieldset 
-  %legend Text Lookup Indexes
-  = link_to 'Corporate Indexes', :action => :generate_corporate_indexes
-  %br
-  = link_to 'Government Indexes', :action => :generate_government_indexes
-  %br
-  = link_to 'Media Indexes', :action => :generate_media_indexes
-%br
-%br
 
 
 %fieldset
   %legend SSPR
   = link_to 'Corporate', :action => :corporate_sspr
+  %br
+  = link_to 'Products', :action => :product_sspr
   %br
   = link_to 'Media', :action => :media_sspr
   %br
