@@ -1,0 +1,22 @@
+%p#notice= notice
+
+%img{:src => get_category_image(@category.logo)}
+%h2
+  = @category.name
+
+%br
+
+%table{:style => "width: 50%;"}
+  %tr
+    %td Shortcut
+    %td= @category.shortcut
+  %tr
+    %td Priority
+    %td= @category.priority
+  %tr
+    %td Display Myvoyce
+    %td= @category.display_myvoyce
+
+= link_to 'Edit', edit_category_path(@category)
+= "|"
+= link_to 'Back', categories_path

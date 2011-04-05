@@ -29,6 +29,7 @@
 		<th>UPC</th>
 		<th>EAN</th>
 		<th>Image</th>
+		<th>Category</th>
 		<th>Description</th>
     <th>Pending?</th>
     <th>Default Include?</th>
@@ -41,6 +42,7 @@
 		<td><%= product.upc %></td>
 		<td><%= product.ean %></td>
     <td><img src="<%= get_product_image_128 product.logo %>" /></td>
+		<td><%= product.category %></td>
 		<td><%= product.description %></td>
     <td><%= product.pending %></td>
     <td><%= product.default_include %></td>

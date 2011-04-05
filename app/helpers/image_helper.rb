@@ -31,6 +31,14 @@ module ImageHelper
     end
   end
 
+  def get_category_image(image_name)
+    if(image_name.nil? || image_name.empty?)
+      "#{Rails.configuration.logos_domain}/images/categories/not_found.gif"
+    else
+      "#{Rails.configuration.logos_domain}/images/categories/#{image_name}"
+    end
+  end
+
   def get_government_image_64(image_name, government_type_id, chamber_id = nil)
     directory = ''
       case government_type_id.to_i

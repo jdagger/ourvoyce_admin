@@ -2,6 +2,7 @@ class Product < ActiveRecord::Base
   has_many :product_supports
   has_many :users, :through => :product_supports
   has_many :product_audits
+  belongs_to :category
 
   scope :default_include, where("default_include = 1")
   scope :pending, where("pending = 1")

@@ -1,0 +1,24 @@
+%h1 Listing categories
+
+= link_to 'New Category', new_category_path
+%table.admin
+  %tr
+    %th 
+    %th 
+    %th Name
+    %th Shortcut
+    %th Logo
+    %th Priority
+    %th Display Myvoyce
+  
+
+  - @categories.each do |category|
+    %tr{:class => cycle("", "alt")}
+      %td= link_to 'Edit', edit_category_path(category)
+      %td= link_to 'Delete', category_path(category), :confirm => 'Are you sure?', :method => :delete
+      %td= category.name
+      %td= category.shortcut
+      %td= category.logo.blank? ? highlight_missing_cell : "<img src='#{get_category_image(category.logo)}' />".html_safe
+      %td= category.priority
+      %td= category.display_myvoyce
+	

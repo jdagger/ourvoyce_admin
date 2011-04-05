@@ -28,6 +28,11 @@
 	</div>
 
 	<div class="container">
+		<div class="label"><%= f.label :category %></div>
+    <div class="value"><%= collection_select :product, :category_id, Category.all, :id, :name, :include_blank => true %></div>
+	</div>
+
+	<div class="container">
 		<div class="label"><%= f.label :description %></div>
 		<div class="value"><%= f.text_area :description, :style => "width: 30em", :rows => "4" %></div>
 	</div>
