@@ -22,7 +22,7 @@ class StatsController < ApplicationController
         zip.save
       end
     end
-    redirect_to :action => :index, :notice => "Updated zip records"
+    redirect_to :action => :index, :notice => "updated zip records"
   end
 
   #Calculate total users in each state
@@ -36,7 +36,7 @@ class StatsController < ApplicationController
       state.user_count = s.count
       state.save
     end
-    redirect_to :action => :index, :notice => "Updated state records"
+    redirect_to :action => :index, :notice => "updated state records"
   end
 
   def national_age_counts
@@ -58,7 +58,7 @@ class StatsController < ApplicationController
       end
     end
     national_age.save
-    redirect_to :action => :index, :notice => "Updated national ages"
+    redirect_to :action => :index, :notice => "updated national ages"
   end
 
   def state_age_counts
@@ -91,7 +91,7 @@ class StatsController < ApplicationController
       age_row.save
     end
     
-    redirect_to :action => :index, :notice => "Updated state age records"
+    redirect_to :action => :index, :notice => "updated state age records"
   end
 
 
@@ -112,7 +112,7 @@ class StatsController < ApplicationController
 
     end_time = Time.now
 
-    redirect_to :action => :index, :notice => "Corporations SSPR calculated (#{((end_time - begin_time) * 1000).to_i}ms)"
+    redirect_to :action => :index, :notice => "corporate SS PR calculated (#{((end_time - begin_time) * 1000).to_i}ms)"
   end
 
   def product_sspr
@@ -132,7 +132,7 @@ class StatsController < ApplicationController
 
     end_time = Time.now
 
-    redirect_to :action => :index, :notice => "Product SSPR calculated (#{((end_time - begin_time) * 1000).to_i}ms)"
+    redirect_to :action => :index, :notice => "product SS PR calculated (#{((end_time - begin_time) * 1000).to_i}ms)"
   end
 
   def media_sspr
@@ -210,7 +210,7 @@ class StatsController < ApplicationController
     end
 
     end_time = Time.now
-    redirect_to :action => :index, :notice => "Media SSPR calculated (#{((end_time - begin_time) * 1000).to_i}ms)"
+    redirect_to :action => :index, :notice => "media SS PR calculated (#{((end_time - begin_time) * 1000).to_i}ms)"
   end
 
   def government_sspr
@@ -272,7 +272,7 @@ class StatsController < ApplicationController
 
     end_time = Time.now
 
-    redirect_to :action => :index, :notice => "Government SSPR calculated (#{((end_time - begin_time) * 1000).to_i}ms)"
+    redirect_to :action => :index, :notice => "government SSPR calculated (#{((end_time - begin_time) * 1000).to_i}ms)"
   end
 
 

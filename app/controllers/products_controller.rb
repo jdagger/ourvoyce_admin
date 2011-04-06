@@ -51,7 +51,7 @@ class ProductsController < ApplicationController
   def create
     @product = Product.new(params[:product])
     if @product.save
-      redirect_to(product_path(@product), :notice => 'Post was successfully created.')
+      redirect_to(product_path(@product), :notice => 'Product was successfully created.')
     else
       render :action => "new"
     end

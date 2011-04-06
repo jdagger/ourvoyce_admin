@@ -26,6 +26,7 @@
 <%= render :partial => "shared/paging", :object => @paging, :as => :paging_data %>
 <table>
 	<tr>
+    <th></th>
 		<th>UPC</th>
 		<th>EAN</th>
 		<th>Image</th>
@@ -39,6 +40,7 @@
 
 <% @products.each do |product|  %>
   <tr class="<%= cycle("", "alt") %>">
+    <td><%= link_to "Edit", edit_product_path(product) %></td>
 		<td><%= product.upc %></td>
 		<td><%= product.ean %></td>
     <td><img src="<%= get_product_image_128 product.logo %>" /></td>
@@ -51,7 +53,6 @@
 		</td>
 		<td>
 			<%= link_to "Show", product_path(product) %>
-			<%= link_to "Edit", edit_product_path(product) %>
 			<%= link_to "Delete", product_path(product), :confirm=>'Are you sure you want to delete?', :method => :delete  %>
 		</td>
 	</tr>

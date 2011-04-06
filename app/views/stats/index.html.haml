@@ -1,46 +1,31 @@
 #notice
-  %h2="Several of these options are no longer valid and will be replaced or updated."
 
-%h2 Stats
-%div{:style => "font-weight: bold; font-size: 115%; color: red;"}= @notice
-=link_to "Zip Counts", :action => :zip_user_counts
-%br
-=link_to "State Counts", :action => :state_user_counts
-%br
-=link_to "National Age Counts", :action => :national_age_counts
-%br
-=link_to "State Age Counts", :action => :state_age_counts
-%br
-%br
+%h2 Counter Calculations
+
+%table.stat
+  %tr
+    %td
+      =link_to "Zip", :action => :zip_user_counts
+    %td
+      =link_to "State", :action => :state_user_counts
+    %td
+      =link_to "National Age", :action => :national_age_counts
+    %td
+      =link_to "State Age", :action => :state_age_counts
 
 
+%h2 SS PR Calculations
 
-%fieldset
-  %legend SSPR
-  = link_to 'Corporate', :action => :corporate_sspr
-  %br
-  = link_to 'Products', :action => :product_sspr
-  %br
-  = link_to 'Media', :action => :media_sspr
-  %br
-  = link_to 'Government', :action => :government_sspr
+%table.stat
+  %tr
+    %td
+      = link_to 'Corporate', :action => :corporate_sspr
+    %td
+      = link_to 'Government', :action => :government_sspr
+    %td
+      = link_to 'Media', :action => :media_sspr
+    %td
+      = link_to 'Products', :action => :product_sspr
 
-%br
 
-%fieldset
-  %legend Generate Votes
-  = link_to "5000 Government Votes", :action => :generate_government_votes
-  %br
-  = link_to "5000 Media Votes", :action => :generate_media_votes
-  %br
-  Corp Id (optional):
-  %input{:type => :text, :id => "votes_corp_id"}
-  = link_to "5000 Corporate Votes", {:action => :generate_corporate_votes}, :id => 'corp_generate_votes_link'
-
-:javascript
-  $(document).ready(function(){
-    $("#votes_corp_id").keyup(function(){
-      $('#corp_generate_votes_link').attr("href", "/stats/generate_corporate_votes?corp_id=" + $(this).val());
-    });
-  });
-
+%div{:style => "font-weight: bold; font-size: 115%; color: red; padding-top: 20px"}= @notice

@@ -13,8 +13,8 @@ module SsprCalculations
       self.neutral_votes = 0
 
       def social_score
-        #(self.positive_votes * 100) / (self.negative_votes + self.positive_votes) rescue 0
-        (self.positive_votes * 100) / (self.positive_votes + self.neutral_votes + self.negative_votes) rescue 0
+        (self.positive_votes * 100) / (self.negative_votes + self.positive_votes) rescue 0
+        #(self.positive_votes * 100) / (self.positive_votes + self.neutral_votes + self.negative_votes) rescue 0
       end
 
       def participation_rate(total_users)
