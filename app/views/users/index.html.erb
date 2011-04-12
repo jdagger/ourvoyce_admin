@@ -12,20 +12,37 @@
 <%= render :partial => "shared/paging", :object => @paging, :as => :paging_data %>
 <table>
   <tr>
+    <th></th>
     <th>Username</th>
+    <th>Verified</th>
     <th>Birth year</th>
     <th>Zip code</th>
+    <th>Email</th>
+    <th>Created</th>
+    <th>Activity</th>
+    <th>Country</th>
     <th></th>
   </tr>
 
 <% @users.each do |user| %>
   <tr class="<%= cycle("", "alt") %>" >
+    <td>
+      <%= link_to 'Show', user_path(user) %>&nbsp;&nbsp;&nbsp;
+      <%= link_to 'Edit', edit_user_path(user) %>
+    </td>
     <td><%= user.login %></td>
+    <td><%= user.verified %></td>
     <td><%= user.birth_year %></td>
     <td><%= user.zip_code %></td>
+    <td><%= user.email %></td>
+    <td><%= user.created_at.strftime("%m/%d/%Y") %></td>
+    <% if user.last_request_at != nil %>
+      <td><%= user.last_request_at.strftime("%m/%d/%Y") %></td>
+    <% else %>
+      <td>&nbsp;</td>
+    <% end %>
+    <td><%= user.country_id %></td>
     <td>
-      <%= link_to 'Show', user_path(user) %>
-      <%= link_to 'Edit', edit_user_path(user) %>
       <%= link_to 'Delete', user_path(user), :confirm => 'Are you sure?', :method => :delete %>
     </td>
   </tr>
