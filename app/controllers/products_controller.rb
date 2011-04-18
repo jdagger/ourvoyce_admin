@@ -20,9 +20,9 @@ class ProductsController < ApplicationController
         case type
         when 'upc'
           @products = Product.where("upc = ? or ean = ?", filter, filter)
-        else
+          else
           #@products = Product.search filter
-          @products = Product.where("1=1")
+          @products = Product.where("1=2")
         end
       end
     else
@@ -30,8 +30,7 @@ class ProductsController < ApplicationController
     end
     page_size = 100 
     page = [params[:page].to_i, 1].max
-    @products = @products.order("name asc") 
-
+    @products = @products.order("created_at desc") 
     @product_count = @products.count
     @products = @products.offset((page - 1) * page_size).limit(page_size)
     @paging.total_pages = (@product_count.to_f / page_size).ceil

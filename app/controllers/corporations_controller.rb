@@ -2,7 +2,7 @@ class CorporationsController < ApplicationController
 
   # GET /corporations
   def index
-    @corporations = Corporation.all
+    @corporations = Corporation.all(:order => 'revenue desc')
   end
 
   # GET /corporations/1

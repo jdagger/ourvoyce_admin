@@ -6,7 +6,7 @@ class UsersController < ApplicationController
     end
 
     if params[:filter].blank?
-      @users = User.where("1=1")
+      @users = User.order('created_at desc')
     else
       @users = User.where('login = ? OR email = ?', params[:filter], params[:filter])
     end

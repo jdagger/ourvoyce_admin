@@ -5,11 +5,13 @@
   %colgroup{:span => 1, :style => "background-color: #eee;"}
   %colgroup{:span => 7}
   %colgroup{:span => 6, :style => "background-color: #eee;"}
+  %colgroup{:span => 1}
   %tr
     %th{:colspan => 1} Edit
     %th{:colspan => 1} Agency
     %th{:colspan => 7} Legislative / Executive
     %th{:colspan => 6} Common
+    %th{:colspan => 1} Delete
   %tr
     %th
 
@@ -29,15 +31,14 @@
     %th Wikipedia
     %th Data 1
     %th Data 2
+    
+    %th 
   
 
   - @governments.each do |government|
     %tr{:class => cycle("", "alt")}
       %td
-        %b
-          = link_to 'Edit', edit_government_path(government)
-        %br
-        = link_to 'Delete', government_path(government), :confirm => 'Are you sure?', :method => :delete
+        = link_to 'Edit', edit_government_path(government)
 
       %td= highlight_or_value government.name
 
@@ -55,7 +56,8 @@
       %td= highlight_or_link government.wikipedia
       %td= highlight_existence government.data1
       %td= highlight_existence government.data2
-
+      %td
+        = link_to 'Delete', government_path(government), :confirm => 'Are you sure?', :method => :delete
 
   %br
 

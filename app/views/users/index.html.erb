@@ -14,12 +14,13 @@
   <tr>
     <th></th>
     <th>Username</th>
-    <th>Verified</th>
-    <th>Birth year</th>
-    <th>Zip code</th>
-    <th>Email</th>
     <th>Created</th>
     <th>Activity</th>
+    <th>Verified</th>
+    <th>Email</th>
+    <th>Birth year</th>
+    <th>Zip code</th>
+
     <th>Country</th>
     <th></th>
   </tr>
@@ -31,16 +32,16 @@
       <%= link_to 'Edit', edit_user_path(user) %>
     </td>
     <td><%= user.login %></td>
-    <td><%= user.verified %></td>
-    <td><%= user.birth_year %></td>
-    <td><%= user.zip_code %></td>
-    <td><%= user.email %></td>
     <td><%= user.created_at.strftime("%m/%d/%Y") %></td>
     <% if user.last_request_at != nil %>
       <td><%= user.last_request_at.strftime("%m/%d/%Y") %></td>
     <% else %>
       <td>&nbsp;</td>
     <% end %>
+    <td><%= user.verified %></td>
+    <td><%= user.email %></td>
+    <td><%= user.birth_year %></td>
+    <td><%= user.zip_code %></td>
     <td><%= user.country_id %></td>
     <td>
       <%= link_to 'Delete', user_path(user), :confirm => 'Are you sure?', :method => :delete %>

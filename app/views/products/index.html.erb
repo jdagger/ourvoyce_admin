@@ -9,11 +9,7 @@
 &nbsp;&nbsp;
 <%= link_to 'Default', :filter => 'default_include' %>
 <% form_tag "/products/filter/blank" do %>
-  Text Search:&nbsp;
-  <input type="text" name="text" />
-  <input type="submit" name="filter_text" value="Apply" />
-  <br />
-  UPC Search:&nbsp;
+  Code search:&nbsp;
   <input type="text" name="upc" />
   <input type="submit" name="filter_upc" value="Apply" />
 <% end %>
@@ -27,13 +23,12 @@
 <table>
 	<tr>
     <th></th>
-		<th>UPC</th>
-		<th>EAN</th>
-		<th>Image</th>
-		<th>Category</th>
+		<th>Code</th>
+    <th>Pending</th>
 		<th>Description</th>
-    <th>Pending?</th>
-    <th>Default Include?</th>
+    <th>Image</th>
+    <th>Include</th>
+    <th>Created</th>
 		<th>Links</th>
 		<th></th>
 	</tr>
@@ -42,14 +37,13 @@
   <tr class="<%= cycle("", "alt") %>">
     <td><%= link_to "Edit", edit_product_path(product) %></td>
 		<td><%= product.upc %></td>
-		<td><%= product.ean %></td>
-    <td><img src="<%= get_product_image_128 product.logo %>" /></td>
-		<td><%= product.category %></td>
-		<td><%= product.description %></td>
     <td><%= product.pending %></td>
+		<td><%= product.description %></td>
+    <td><img src="<%= get_product_image_128 product.logo %>" /></td>
     <td><%= product.default_include %></td>
+    <td><%= product.created_at.strftime("%m/%d/%Y") %></td>
 		<td>
-			<a href="http://www.thefind.com/search?query=<%= product.upc.blank? ? product.ean : product.upc %>" target="_blank">TheFind</a>
+			<a href="http://www.thefind.com/search?query=<%= product.upc.blank? ? product.ean : product.upc %>" target="_blank">Find</a>
 		</td>
 		<td>
 			<%= link_to "Show", product_path(product) %>
